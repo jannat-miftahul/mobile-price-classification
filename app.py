@@ -8,10 +8,10 @@ with open("mobile_price_rf_model.pkl", "rb") as f:
     model = pickle.load(f)
 
 PRICE_LABELS = {
-    0: "💰 Low Cost",
-    1: "💰💰 Medium-Low Cost",
-    2: "💰💰💰 Medium-High Cost",
-    3: "💰💰💰💰 High Cost"
+    0: "Low Cost",
+    1: "Medium-Low Cost",
+    2: "Medium-High Cost",
+    3: "High Cost"
 }
 
 # ── 2. Prediction function ─────────────────────────────────────────────────
@@ -44,14 +44,14 @@ def predict_price(
 
     label       = PRICE_LABELS[pred]
     confidence  = proba[pred] * 100
-    proba_text  = "\n".join(
+    probabilitiy  = "\n".join(
         [f"  {PRICE_LABELS[i]}: {p*100:.1f}%" for i, p in enumerate(proba)]
     )
 
     return (
         f"### {label}\n\n"
         f"**Confidence:** {confidence:.1f}%\n\n"
-        f"**All class probabilities:**\n{proba_text}"
+        f"**All class probabilities:**\n{probabilitiy}"
     )
 
 # ── 3. Gradio Interface ────────────────────────────────────────────────────
@@ -66,34 +66,34 @@ with gr.Blocks(title="Mobile Price Predictor") as app:
 
     with gr.Row():
         with gr.Column():
-            gr.Markdown("### 🔋 Battery & Performance")
+            gr.Markdown("### Battery & Performance")
             battery_power = gr.Slider(500, 2000, step=1,  value=1000, label="Battery Power (mAh)")
-            ram           = gr.Slider(256,  3998, step=2,  value=2048, label="RAM (MB)")
-            clock_speed   = gr.Slider(0.5,   3.0, step=0.1,value=1.5, label="Clock Speed (GHz)")
-            n_cores       = gr.Slider(1,      8,  step=1,  value=4,   label="Number of Cores")
+            ram           = gr.Slider(256, 3998, step=2,  value=2048, label="RAM (MB)")
+            clock_speed   = gr.Slider(0.5, 3.0, step=0.1,value=1.5, label="Clock Speed (GHz)")
+            n_cores       = gr.Slider(1, 8,  step=1,  value=4,   label="Number of Cores")
 
         with gr.Column():
-            gr.Markdown("### 📷 Camera")
+            gr.Markdown("### Camera")
             fc = gr.Slider(0, 19, step=1, value=5, label="Front Camera (MP)")
             pc = gr.Slider(0, 20, step=1, value=8, label="Primary Camera (MP)")
 
         with gr.Column():
-            gr.Markdown("### 📺 Screen & Dimensions")
-            px_height = gr.Slider(0,  1960, step=1, value=800,  label="Pixel Height")
+            gr.Markdown("### Screen & Dimensions")
+            px_height = gr.Slider(0, 1960, step=1, value=800,  label="Pixel Height")
             px_width  = gr.Slider(500, 1998, step=1, value=1200, label="Pixel Width")
-            sc_h      = gr.Slider(5,   19,  step=1, value=12,   label="Screen Height (cm)")
-            sc_w      = gr.Slider(0,   18,  step=1, value=6,    label="Screen Width (cm)")
+            sc_h      = gr.Slider(5, 19,  step=1, value=12,   label="Screen Height (cm)")
+            sc_w      = gr.Slider(0, 18,  step=1, value=6,    label="Screen Width (cm)")
 
     with gr.Row():
         with gr.Column():
-            gr.Markdown("### 💾 Storage & Body")
-            int_memory = gr.Slider(2,   64, step=1,   value=32,  label="Internal Memory (GB)")
+            gr.Markdown("### Storage & Body")
+            int_memory = gr.Slider(2, 64, step=1,   value=32,  label="Internal Memory (GB)")
             mobile_wt  = gr.Slider(80, 200, step=1,   value=140, label="Mobile Weight (g)")
             m_dep      = gr.Slider(0.1, 1.0, step=0.1, value=0.5, label="Mobile Depth (cm)")
             talk_time  = gr.Slider(2,   20,  step=1,   value=10,  label="Talk Time (hours)")
 
         with gr.Column():
-            gr.Markdown("### 📡 Connectivity")
+            gr.Markdown("### Connectivity")
             blue        = gr.Checkbox(label="Bluetooth",    value=True)
             dual_sim    = gr.Checkbox(label="Dual SIM",     value=True)
             four_g      = gr.Checkbox(label="4G",           value=True)
